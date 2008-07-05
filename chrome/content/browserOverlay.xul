@@ -20,6 +20,22 @@
 
   <script type="application/x-javascript" src="chrome://taboo/content/browserOverlay.js"/>
 
+  <!-- Menu Additions -->
+  <menu id="menu_ToolsPopup">
+    <menu id="tabooMenu"
+          insertafter="devToolsSeparator"
+          label="Taboo">
+      <menupopup id="tabooMenupopup">
+        <menuitem label="Show Taboos"
+                  id="tabooShow"
+                  command="cmd_showTaboos" />
+        <menuitem label="Import/Export"
+                  id="tabooExport"
+                  command="cmd_tabooImportExport" />
+      </menupopup>
+    </menu>
+  </menu>
+
   <toolbox id="navigator-toolbox">
     <toolbarpalette id="BrowserToolbarPalette">
       <toolbarbutton id="taboo-toolbarbutton-add"
@@ -37,7 +53,7 @@
       </toolbarbutton>
     </toolbarpalette>
   </toolbox>
-  
+
   <keyset id="mainKeyset">
       <key id="key_showTaboos"
           key="F"
@@ -63,7 +79,7 @@
     <command id="cmd_toggleTaboo" oncommand="taboo.toggleTaboo(event)" />
     <command id="cmd_addTabooAndClose" oncommand="taboo.addTabooAndClose(event)" />
     <command id="cmd_removeTaboo" oncommand="taboo.removeTaboo(event)" />
+    <command id="cmd_tabooImportExport" oncommand="taboo.importExport(event)" />
   </commandset>
 
 </overlay>
-

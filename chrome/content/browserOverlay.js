@@ -11,6 +11,7 @@ function Taboo() {
   const SVC = Cc['@oy/taboo;1'].getService(Ci.oyITaboo);
 
   const START_URL = 'chrome://taboo/content/start.html';
+  const EXPORT_URL = 'chrome://taboo/content/export.html';
 
   function saved(state) {
     if ($('taboo-toolbarbutton-add')) {
@@ -96,21 +97,29 @@ function Taboo() {
     saved(false);
   };
 
-  this.show = function(event) {
-    var tab = getTabIdxForUrl(START_URL);
+  this._openSpecial = function(event, url) {
+    var tab = getTabIdxForUrl(url);
     if (tab !== null) {
       gBrowser.mTabContainer.selectedIndex = tab;
       return;
     }
 
-    var url = gBrowser.selectedBrowser.webNavigation.currentURI.spec;
+    var currentUrl = gBrowser.selectedBrowser.webNavigation.currentURI.spec;
     if (event.shiftKey ||
-        url == 'about:blank') {
-      openUILinkIn(START_URL, 'current');
+        currentUrl == 'about:blank') {
+      openUILinkIn(url, 'current');
       return;
     }
 
-    openUILinkIn(START_URL, 'tab');
+    openUILinkIn(url, 'tab');
+  }
+
+  this.show = function(event) {
+    this._openSpecial(event, START_URL);
+  };
+
+  this.importExport = function(event) {
+    this._openSpecial(event, EXPORT_URL);
   };
 
   this.updateButton = function(url) {
