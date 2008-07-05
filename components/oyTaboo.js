@@ -232,14 +232,16 @@ TabooStorageSQL.prototype = {
       entry = this._store.new();
       entry.url = url;
       entry.md5 = hex_md5(url);
+      entry.title = title;
       entry.created = updated;
+    } else if (entry.deleted) {
+      entry.title = title;
     }
 
-    if (description) {
+    if (description != null) {
       entry.description = description;
     }
 
-    entry.title = title;
     entry.updated = updated;
     entry.deleted = null;
     entry.full = data.toSource();
@@ -650,6 +652,9 @@ TabooService.prototype = {
   getRecent: function TB_getRecent(aMaxRecent) {
     return this._tabEnumerator(this._storage.getURLs(null, false, aMaxRecent));
   },
+  getForURL: function TB_getForURL(aURL) {
+    return this._storage.retrieve(aURL);
+  },
 
   import: function TB_import(aFile) {
     return this._storage.import(aFile);
@@ -684,7 +689,17 @@ TabooService.prototype = {
       .getService(Ci.nsIWindowMediator);
     var win = wm.getMostRecentWindow('navigator:browser');
 
-    var loadInBackground = getBoolPref("browser.tabs.loadBookmarksInBackground", false);
+    var loadInBackground = getBoolPref("browser.tabs.loadInBackground", true);
+
+    if (aWhere == 'tabforeground') {
+      loadInBackground = false;
+      aWhere = 'tab';
+    }
+
+    if (aWhere == 'tabbackground') {
+      loadInBackground = true;
+      aWhere = 'tab';
+    }
 
     var tabbrowser = win.getBrowser();
 
